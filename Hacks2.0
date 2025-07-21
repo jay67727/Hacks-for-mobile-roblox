@@ -1,0 +1,97 @@
+roblox-mod-menu/
+│
+├── ModMenuScript.lua        <-- The mod menu UI (LocalScript)
+├── README.md                <-- Description of what it is-- Mod Menu for your own Roblox game
+-- Author: jaybroo08967 (or your GitHub name)
+-- Press "M" to toggle menu
+
+local Players = game:GetService("Players")
+local UserInputService = game:GetService("UserInputService")
+local LocalPlayer = Players.LocalPlayer
+local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
+
+-- UI
+local gui = Instance.new("ScreenGui", PlayerGui)
+gui.Name = "ModMenu"
+
+local frame = Instance.new("Frame", gui)
+frame.Size = UDim2.new(0, 250, 0, 300)
+frame.Position = UDim2.new(0, 30, 0.3, 0)
+frame.BackgroundColor3 = Color3.fromRGB(25,25,25)
+frame.BorderSizePixel = 0
+frame.Visible = false
+
+-- Buttons
+local function createButton(text, order, callback)
+	local btn = Instance.new("TextButton", frame)
+	btn.Size = UDim2.new(1, -20, 0, 35)
+	btn.Position = UDim2.new(0, 10, 0, 10 + order * 40)
+	btn.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+	btn.TextColor3 = Color3.new(1, 1, 1)
+	btn.Font = Enum.Font.SourceSansBold
+	btn.TextSize = 18
+	btn.Text = text
+	btn.MouseButton1Click:Connect(callback)
+end
+
+createButton("🚀 Speed Boost", 0, function()
+	local h = LocalPlayer.Character and LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
+	if h then h.WalkSpeed = 100 end
+end)
+
+createButton("💨 High Jump", 1, function()
+	local h = LocalPlayer.Character and LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
+	if h then h.JumpPower = 120 end
+end)
+
+createButton("🔁 Respawn", 2, function()
+	LocalPlayer:LoadCharacter()
+end)
+
+createButton("🌙 Invisibility", 3, function()
+	if LocalPlayer.Character then
+		for _, part in pairs(LocalPlayer.Character:GetDescendants()) do
+			if part:IsA("BasePart") and part.Name ~= "HumanoidRootPart" then
+				part.Transparency = 1
+			end
+		end
+	end
+end)
+
+createButton("🔊 Play Sound", 4, function()
+	local sound = Instance.new("Sound", workspace)
+	sound.SoundId = "rbxassetid://9118823106"
+	sound.Volume = 2
+	sound:Play()
+	game.Debris:AddItem(sound, 5)
+end)
+
+UserInputService.InputBegan:Connect(function(input, gpe)
+	if gpe then return end
+	if input.KeyCode == Enum.KeyCode.M then
+		frame.Visible = not frame.Visible
+	end
+end)# Roblox Mod Menu (For Your Own Game)
+
+This is a simple mod/admin menu for use in your **own Roblox games**.  
+Press **M** in-game to toggle the menu.
+
+## Features
+
+- 🚀 Speed Boost  
+- 💨 High Jump  
+- 🔁 Respawn  
+- 🌙 Invisibility  
+- 🔊 Sound Test  
+
+**Note**: This script is for development and testing only. It won’t work in games you don’t own.
+
+## Usage
+
+1. Place the `ModMenuScript.lua` into `StarterPlayerScripts` as a LocalScript.
+2. Start the game in Studio.
+3. Press `M` to open/close the menu.
+
+## License
+
+MIT – Free to use in your own games.
