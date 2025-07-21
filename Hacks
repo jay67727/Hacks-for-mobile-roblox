@@ -1,0 +1,80 @@
+-- LocalScript in StarterPlayerScripts
+local Players = game:GetService("Players")
+local UserInputService = game:GetService("UserInputService")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local LocalPlayer = Players.LocalPlayer
+local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
+
+-- Whitelist
+local allowed = {
+	["jaybroo08967"] = true,
+	["YourOtherAdmin"] = true
+}
+
+if not allowed[LocalPlayer.Name] then return end
+
+-- GUI Setup
+local gui = Instance.new("ScreenGui", PlayerGui)
+gui.Name = "ModMenu"
+local frame = Instance.new("Frame", gui)
+frame.Size = UDim2.new(0, 260, 0, 400)
+frame.Position = UDim2.new(0, 30, 0.3, 0)
+frame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+frame.Visible = false
+
+-- Helper to make buttons
+local function createButton(text, y, func)
+	local btn = Instance.new("TextButton")
+	btn.Size = UDim2.new(1, -20, 0, 35)
+	btn.Position = UDim2.new(0, 10, 0, 10 + y * 40)
+	btn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+	btn.TextColor3 = Color3.new(1,1,1)
+	btn.Font = Enum.Font.SourceSansBold
+	btn.TextSize = 18
+	btn.Text = text
+	btn.Parent = frame
+	btn.MouseButton1Click:Connect(func)
+end
+
+-- Button Actions
+createButton("🚀 Set WalkSpeed to 50", 0, function()
+	LocalPlayer.Character.Humanoid.WalkSpeed = 50
+end)
+
+createButton("🌙 Invisibility", 1, function()
+	for _, part in pairs(LocalPlayer.Character:GetDescendants()) do
+		if part:IsA("BasePart") and part.Name ~= "HumanoidRootPart" then
+			part.Transparency = 1
+		end
+	end
+end)
+
+createButton("🔁 Respawn", 2, function()
+	LocalPlayer:LoadCharacter()
+end)
+
+createButton("🧍 Teleport to Player", 3, function()
+	local target = Players:FindFirstChild("PlayerNameHere")
+	if target and target.Character and LocalPlayer.Character then
+		LocalPlayer.Character:SetPrimaryPartCFrame(target.Character.PrimaryPart.CFrame + Vector3.new(2,0,0))
+	end
+end)
+
+createButton("💨 Set JumpPower to 100", 4, function()
+	LocalPlayer.Character.Humanoid.JumpPower = 100
+end)
+
+createButton("🔊 Play Sound", 5, function()
+	local sound = Instance.new("Sound", workspace)
+	sound.SoundId = "rbxassetid://9118823106" -- Example: funny sound
+	sound:Play()
+	game.Debris:AddItem(sound, 5)
+end)
+
+-- Toggle menu with `M`
+UserInputService.InputBegan:Connect(function(input, gpe)
+	if gpe then return end
+	if input.KeyCode == Enum.KeyCode.M then
+		frame.Visible = not frame.Visible
+	end
+end)
